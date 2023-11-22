@@ -1,0 +1,166 @@
+/* body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+} */
+.App {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+/* commonBtn */
+.commonBtn {
+  cursor: pointer;
+  border: none;
+  height: 33px;
+  padding: 0 16px;
+  margin-left: 5px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 70px;
+}
+.commonBtn_default {
+  background-color: #4279ff;
+  color: #fff;
+}
+.commonBtn_cancel {
+  background-color: #ff5656;
+  color: #fff;
+}
+
+/* Home */
+.Home {
+  width: 100%;
+}
+.Home .homeHeader {
+  background-color: rgb(246, 247, 255);
+  border: 1px solid rgb(230, 234, 252);
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  position: sticky;
+    top: 0;
+}
+.Home .list_wrapper {
+  margin-top: 10px;
+}
+.shareInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vw;
+  color: rgb(199, 199, 199);
+}
+
+/* ShareItem */
+.ShareItem {
+  margin-top: 5px;
+  background-color: rgb(249, 249, 249);
+  padding: 10px 5px;
+  border: 1px solid rgb(230, 234, 252);
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.ShareItem .img_wrapper {
+  cursor: pointer;
+  min-width: 120px;
+  height: 100px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+}
+.ShareItem .img_wrapper img {
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.ShareItem .info_wrapper {
+  cursor: pointer;
+  flex-grow: 1;
+  margin-left: 10px;
+  height: 100px;
+  overflow: hidden;
+}
+.ShareItem .shareTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.ShareItem .shareDescription {
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 230px;
+}
+.ShareItem .btn_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.ShareItem .description_wrapper {
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Editor */
+.Editor {
+  width: 100%;
+}
+.Editor .img_wrapper img {
+  height: 200px;
+  border-radius: 6px;
+}
+.Editor .sectionTitle {
+  font-size: 13px;
+}
+.Editor .input_box input {
+  padding: 10px;
+  width: 80%;
+  border: 1px solid #ececec;
+  border-radius: 6px;
+}
+.Editor textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 200px;
+  resize: vertical;
+  border: 1px solid #ececec;
+  border-radius: 6px;
+  padding: 10px;
+}
+.Editor .editorpage_btn {
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Detail */
+.Detail {
+  width: 100%;
+}
+.Detail .detailHeader {
+  background-color: rgb(246, 247, 255);
+  border: 1px solid rgb(230, 234, 252);
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  position: sticky;
+    top: 0;
+}
