@@ -40,13 +40,17 @@
   background-color: rgb(246, 247, 255);
   border: 1px solid rgb(230, 234, 252);
   border-radius: 5px;
-  padding: 5px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
   position: sticky;
-    top: 0;
+  top: 0;
+}
+.Home .homeHeader p {
+  margin-bottom: 0;
+  font-size: 18px;
 }
 .Home .list_wrapper {
   margin-top: 10px;
@@ -60,44 +64,26 @@
 }
 
 /* ShareItem */
-.ShareItem {
-  margin-top: 5px;
-  background-color: rgb(249, 249, 249);
-  padding: 10px 5px;
-  border: 1px solid rgb(230, 234, 252);
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
+.ShareItem .contents {
+  margin: 5px 0;
 }
 .ShareItem .img_wrapper {
   cursor: pointer;
-  min-width: 120px;
-  height: 100px;
-  border-radius: 6px;
+  min-width: 50px;
+  height: 70px;
   display: flex;
   justify-content: center;
   background-color: white;
+  border: 1px solid rgb(230, 234, 252);
+  border-radius: 6px;
+  margin-right: 20px;
 }
 .ShareItem .img_wrapper img {
-  width: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.ShareItem .info_wrapper {
-  cursor: pointer;
-  flex-grow: 1;
-  margin-left: 10px;
-  height: 100px;
-  overflow: hidden;
+  border-radius: 6px;
 }
 .ShareItem .shareTitle {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-.ShareItem .shareDescription {
   font-size: 15px;
+  font-weight: bold;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -105,14 +91,12 @@
 }
 .ShareItem .btn_wrapper {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 10px;
 }
-.ShareItem .description_wrapper {
-  height: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.ShareItem .btn_wrapper .icon{
+  cursor: pointer;
 }
 
 /* Editor */
@@ -162,5 +146,5 @@
   align-items: center;
   font-weight: bold;
   position: sticky;
-    top: 0;
+  top: 0;
 }

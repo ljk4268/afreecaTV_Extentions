@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { createContext, useEffect, useReducer } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
@@ -43,6 +44,9 @@ function App() {
   const fetchData = async (broadNo: number) => {
     try {
       const response = await getItems({ broadcastNo: broadNo })
+      response.data.shareList.forEach((d: IData) => {
+        d.tipText = d.tipText === '' ? '내용없음' : d.tipText
+      })
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data.shareList })
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -65,7 +69,7 @@ function App() {
 
   return (
     <ShareDataContext.Provider value={data}>
-      <ShareDispatchContext.Provider value={{fetchData}}>
+      <ShareDispatchContext.Provider value={{ fetchData }}>
         <div className="App">
           {pathname === '/index.html' ? <Home /> : ''}
           <Routes>

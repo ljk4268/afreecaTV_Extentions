@@ -5,7 +5,7 @@ import { useContext, useEffect } from 'react'
 // components
 import Button from '../components/Button'
 import ShareItem from '../components/ShareItem'
-import { isDataView } from 'util/types'
+import Accordion from 'react-bootstrap/Accordion'
 
 // types
 import { IData } from '../interface/commonInterface'
@@ -24,7 +24,6 @@ const Home = () => {
     fetchData(1)
   }, [])
 
-
   return (
     <div className="Home">
       <div className="homeHeader">
@@ -32,9 +31,11 @@ const Home = () => {
         <Button text="추가하기" onClick={() => navigate('/new')} />
       </div>
       <div className="list_wrapper">
-        {dataList.map((data) => (
-          <ShareItem {...data} key={data.shareId} />
-        ))}
+        <Accordion>
+          {dataList.map((data) => (
+            <ShareItem {...data} key={data.shareId} />
+          ))}
+        </Accordion>
       </div>
     </div>
   )

@@ -16,7 +16,7 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
   const dataList = useContext(ShareDataContext)
-  const broadcastNo = dataList[0]?.broadcastNo
+  const broadcastNo = 1
   const navigate = useNavigate()
   const titleRef = useRef<HTMLInputElement>(null)
   const [shareTitle, setShareTitle] = useState<string>('')
@@ -29,7 +29,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         setShareTitle(originData.title)
         setShareLink(originData.linkText)
         setShareDes(originData.tipText)
-      }
+      }// content == "" ? "내용없음" : content
     }
   }, [isEdit, originData])
 
@@ -40,7 +40,15 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         return
       }
 
-      const params = {
+      const broadcastShareInsertDTO = {
+        broadcastNo: broadcastNo,
+        linkText: shareLink,
+        title: shareTitle,
+        tipText: shareDes,
+      }
+
+      const broadcastShareUpdateDTO = {
+        shareId: originData?.shareId,
         broadcastNo: broadcastNo,
         srcImg: '',
         linkText: shareLink,
@@ -48,12 +56,28 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         tipText: shareDes,
       }
 
+      const formData = new FormData()
+
+      
+
       let response
 
       if (isEdit) {
-        response = await editItems(params)
+        formData.append(
+          'broadcastShareUpdateDTO',
+          new Blob([JSON.stringify(broadcastShareUpdateDTO)], {
+            type: 'application/json',
+          })
+        )
+        response = await editItems(formData)
       } else {
-        response = await addItems(params)
+        formData.append(
+          'broadcastShareInsertDTO',
+          new Blob([JSON.stringify(broadcastShareInsertDTO)], {
+            type: 'application/json',
+          })
+        )
+        response = await addItems(formData)
       }
 
       if (response.status === 200) {

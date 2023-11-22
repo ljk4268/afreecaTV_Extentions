@@ -48,6 +48,7 @@ export interface IData {
   shareId: number
   broadcastNo: number
   srcImg: string
+  savedImgPath: string
   linkText: string
   title: string
   tipText: string

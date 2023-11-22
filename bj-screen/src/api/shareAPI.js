@@ -6,11 +6,12 @@ export function getItems(params) {
 }
 
 export function addItems(params) {
-  return api.post('/create', params)
+  console.log(params.get('broadcastShareInsertDTO'))
+  return api.post('/create', params, {'Content-Type': 'multipart/form-data'})
 }
 
 export function editItems(params) {
-  return api.post('/update', params)
+  return api.post('/update', params, {'Content-Type': 'multipart/form-data'})
 }
 
 export function deleteItems(params) {

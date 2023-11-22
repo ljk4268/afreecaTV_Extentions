@@ -15,7 +15,7 @@ const Edit = () => {
   const [originData, setOriginData] = useState<IData>()
 
   useEffect(() => {
-    if (dataList.length > 1) {
+    if (dataList.length >= 1) {
       if (id) {
         const postEdit = dataList.find((d) => d.shareId === parseInt(id))
         if (postEdit) {

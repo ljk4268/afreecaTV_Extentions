@@ -2,6 +2,9 @@ import { useNavigate } from 'react-router-dom'
 
 // components
 import Button from './Button'
+import Accordion from 'react-bootstrap/Accordion'
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
 
 // types
 import { IData } from '../interface/commonInterface'
@@ -14,6 +17,7 @@ import { ShareDispatchContext } from '../App'
 const ShareItem = ({
   shareId,
   broadcastNo,
+  savedImgPath,
   srcImg,
   linkText,
   title,
@@ -25,42 +29,45 @@ const ShareItem = ({
   const goEdit = () => {
     navigate(`/edit/${shareId}`)
   }
-  const goDetail = () => {
-    navigate(`/detail/${shareId}`)
-  }
   const onDelete = async () => {
-    const params = {
-      broadcastNo: broadcastNo,
-      shareId: shareId,
-    }
-
-    try {
-      const response = await deleteItems(params)
-      if (response.status === 200) {
-        fetchData(1)
+    if (window.confirm('삭제 하시겠습니까?')) {
+      const params = {
+        broadcastNo: broadcastNo,
+        shareId: shareId,
       }
-    } catch (error) {
-      console.error('Error:', error)
+
+      try {
+        const response = await deleteItems(params)
+        if (response.status === 200) {
+          fetchData(1)
+        }
+      } catch (error) {
+        console.error('Error:', error)
+      }
     }
   }
   return (
     <div className="ShareItem">
-      <div className="img_wrapper">
-        <img src="/assets/afreecatv_logo.jpg" alt="defaultImg" />
-      </div>
-      <div className="info_wrapper" onClick={goDetail}>
-        <div className="shareTitle">{title}</div>
-        <div className="description_wrapper">
-          <div className="shareDescription">{tipText}</div>
-        </div>
-      </div>
-      <div className="btn_wrapper">
-        <div>
-          <Button text="수정하기" onClick={goEdit} />
-        </div>
-        <div style={{marginTop: '5px'}}>
-          <Button text="삭제하기" type="cancel" onClick={onDelete} />
-        </div>
+      <div className="contents">
+        <Accordion.Item eventKey={`${shareId}`}>
+          <Accordion.Header>
+            <div className="img_wrapper">
+              <img src="/assets/afreecatv_logo.jpg" alt="defaultImg" />
+            </div>
+            <div className="shareTitle">{title}</div>
+          </Accordion.Header>
+          <Accordion.Body>
+            <div style={{ whiteSpace: 'pre-wrap' }}>{tipText}</div>
+            <div className="btn_wrapper">
+              <div className="icon edit">
+                <EditNoteOutlinedIcon onClick={goEdit} />
+              </div>
+              <div className="icon delete">
+                <DeleteForeverOutlinedIcon onClick={onDelete} />
+              </div>
+            </div>
+          </Accordion.Body>
+        </Accordion.Item>
       </div>
     </div>
   )
