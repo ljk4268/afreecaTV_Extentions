@@ -5,6 +5,7 @@ import { addItems, editItems } from '../api/shareAPI'
 
 // components
 import Button from './Button'
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 
 // types
 import { IData } from '../interface/commonInterface'
@@ -19,6 +20,8 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
   const broadcastNo = 1
   const navigate = useNavigate()
   const titleRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
   const [shareTitle, setShareTitle] = useState<string>('')
   const [shareLink, setShareLink] = useState<string>('')
   const [shareDes, setShareDes] = useState<string>('')
@@ -29,7 +32,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         setShareTitle(originData.title)
         setShareLink(originData.linkText)
         setShareDes(originData.tipText)
-      }// content == "" ? "내용없음" : content
+      } // content == "" ? "내용없음" : content
     }
   }, [isEdit, originData])
 
@@ -58,7 +61,11 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
 
       const formData = new FormData()
 
-      
+      const fileInput = inputRef.current
+      if (fileInput && fileInput.files) {
+        const file = fileInput.files[0]
+        formData.append('multipartFiles', file)
+      }
 
       let response
 
@@ -90,11 +97,39 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
     }
   }
 
+  const handleAddImage = () => {
+    document.getElementById('backgroundImgInput')?.click()
+  }
+
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files ? e.target.files[0] : null
+
+    if (file) {
+      let reader = new FileReader()
+      reader.onload = function (event) {
+        // 이미지의 경로를 변경
+        if (imgRef.current) {
+          imgRef.current.src = event.target?.result as string
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
     <div className="Editor">
       <section>
         <div className="img_wrapper">
-          <img src="/assets/afreecatv_logo.jpg" alt="defaultImg" />
+          <img ref={imgRef} src="/assets/afreecatv_logo.jpg" alt="defaultImg" />
+          <AddAPhotoIcon className="img_addBtn" onClick={handleAddImage} />
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            id="backgroundImgInput"
+            className="addInput"
+            onChange={handleChangeImage}
+          />
         </div>
       </section>
       <section>

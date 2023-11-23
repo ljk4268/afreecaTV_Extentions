@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
 // components
-import Button from './Button'
 import Accordion from 'react-bootstrap/Accordion'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
@@ -10,8 +9,8 @@ import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
 import { IData } from '../interface/commonInterface'
 
 // API
-import { deleteItems } from '../api/shareAPI'
-import { useContext } from 'react'
+import { deleteItems, getImage } from '../api/shareAPI'
+import { useContext, useEffect, useState } from 'react'
 import { ShareDispatchContext } from '../App'
 
 const ShareItem = ({
@@ -25,34 +24,57 @@ const ShareItem = ({
 }: IData) => {
   const navigate = useNavigate()
   const { fetchData } = useContext(ShareDispatchContext)
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(
+    srcImg && savedImgPath ? null : '/assets/afreecatv_logo.jpg'
+  )
 
   const goEdit = () => {
     navigate(`/edit/${shareId}`)
   }
   const onDelete = async () => {
-    if (window.confirm('삭제 하시겠습니까?')) {
-      const params = {
-        broadcastNo: broadcastNo,
-        shareId: shareId,
-      }
+    const params = {
+      broadcastNo: broadcastNo,
+      shareId: shareId,
+    }
 
-      try {
-        const response = await deleteItems(params)
-        if (response.status === 200) {
-          fetchData(1)
-        }
-      } catch (error) {
-        console.error('Error:', error)
+    try {
+      const response = await deleteItems(params)
+      if (response.status === 200) {
+        fetchData(1)
       }
+    } catch (error) {
+      console.error('Error:', error)
     }
   }
+  const fetchImages = async () => {
+    const params = {
+      srcImg: srcImg,
+      savedImgPath: savedImgPath,
+    }
+    try {
+      const res = await getImage(params)
+      if(res.status){
+        const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } ));
+        setImageDataUrl(url)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (srcImg && savedImgPath) {
+      fetchImages()
+    }
+  }, [])
+
   return (
     <div className="ShareItem">
       <div className="contents">
         <Accordion.Item eventKey={`${shareId}`}>
           <Accordion.Header>
             <div className="img_wrapper">
-              <img src="/assets/afreecatv_logo.jpg" alt="defaultImg" />
+              {imageDataUrl && <img src={imageDataUrl} alt="Uploaded Image" />}
             </div>
             <div className="shareTitle">{title}</div>
           </Accordion.Header>
