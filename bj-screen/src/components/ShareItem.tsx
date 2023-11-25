@@ -72,7 +72,7 @@ const ShareItem = ({
     if (srcImg && savedImgPath) {
       fetchImages()
     }
-  }, [])
+  }, [srcImg, savedImgPath])
 
   return (
     <div className="ShareItem">
