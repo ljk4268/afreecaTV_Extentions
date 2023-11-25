@@ -10,6 +10,9 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 // types
 import { EditorProps } from '../interface/commonInterface'
 
+// API
+import { getImage } from '../api/shareAPI'
+
 const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
   const broadNo = useContext(ShareBroadNoContext)
   const navigate = useNavigate()
@@ -20,6 +23,12 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
   const [shareTitle, setShareTitle] = useState<string>('')
   const [shareLink, setShareLink] = useState<string>('')
   const [shareDes, setShareDes] = useState<string>('')
+  const [sizeLimit, setSizeLimit] = useState<boolean>(false)
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(
+    originData?.srcImg && originData?.savedImgPath
+      ? null
+      : '/assets/afreecatv_logo.jpg'
+  )
 
   useEffect(() => {
     if (isEdit) {
@@ -27,6 +36,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         setShareTitle(originData.title)
         setShareLink(originData.linkText)
         setShareDes(originData.tipText)
+        fetchImages()
       }
     }
   }, [isEdit, originData])
@@ -53,7 +63,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
       const broadcastShareUpdateDTO = {
         shareId: originData?.shareId,
         broadcastNo: broadNo,
-        srcImg: '',
+        srcImg: originData?.srcImg,
         linkText: shareLink,
         title: shareTitle,
         tipText: shareDes,
@@ -64,7 +74,16 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
       const fileInput = inputRef.current
       if (fileInput && fileInput.files) {
         const file = fileInput.files[0]
-        formData.append('multipartFiles', file)
+        const fileSize = fileInput.files[0]?.size
+        const maxSize = 10 * 1024 * 1024;
+
+        if (fileSize > maxSize) {
+          setSizeLimit(true)
+          return
+        } else {
+          setSizeLimit(false)
+          formData.append('multipartFiles', file)
+        }
       }
 
       let response
@@ -115,11 +134,31 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
     }
   }
 
+  const fetchImages = async () => {
+    const params = {
+      srcImg: originData?.srcImg,
+      savedImgPath: originData?.savedImgPath,
+    }
+    try {
+      const res = await getImage(params)
+      if (res.status) {
+        const url = window.URL.createObjectURL(
+          new Blob([res.data], { type: res.headers['content-type'] })
+        )
+        setImageDataUrl(url)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
   return (
     <div className="Editor">
       <section>
         <div className="img_wrapper">
-          <img ref={imgRef} src="/assets/afreecatv_logo.jpg" alt="defaultImg" />
+          {imageDataUrl && (
+            <img ref={imgRef} src={imageDataUrl} alt={originData?.srcImg} />
+          )}
           <AddAPhotoIcon className="img_addBtn" onClick={handleAddImage} />
           <input
             ref={inputRef}
@@ -130,6 +169,11 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
             onChange={handleChangeImage}
           />
         </div>
+        {sizeLimit ? (
+          <div className="imgFile">이미지 파일은 10mb이하만 등록됩니다.</div>
+        ) : (
+          ''
+        )}
       </section>
       <section>
         <div className="sectionTitle">
@@ -156,7 +200,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
             value={shareLink}
             className="input_link"
             type="text"
-            placeholder="www.afreecatv.com이 포함된 링크를 입력해주세요.(필수아님)"
+            placeholder="afreecatv.com이 포함된 링크를 입력해주세요.(필수아님)"
             onChange={(e) => setShareLink(e.target.value)}
           ></input>
         </div>
@@ -173,19 +217,19 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
           ></textarea>
         </div>
       </section>
-        <section>
-          <div className="editorpage_btn">
-            <Button
-              text="취소"
-              type="cancel"
-              onClick={() => navigate(-1)}
-            ></Button>
-            <Button
-              text={isEdit ? '수정' : '등록'}
-              onClick={handleSubmit}
-            ></Button>
-          </div>
-        </section>
+      <section>
+        <div className="editorpage_btn">
+          <Button
+            text="취소"
+            type="cancel"
+            onClick={() => navigate(-1)}
+          ></Button>
+          <Button
+            text={isEdit ? '수정' : '등록'}
+            onClick={handleSubmit}
+          ></Button>
+        </div>
+      </section>
     </div>
   )
 }

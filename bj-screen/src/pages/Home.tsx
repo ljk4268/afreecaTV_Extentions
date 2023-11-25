@@ -27,7 +27,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchData(broadNo)
-  }, [broadNo])
+  }, [dataList])
 
   return (
     <div className="Home">

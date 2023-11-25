@@ -7,7 +7,6 @@ import { Routes, Route, useNavigate } from 'react-router-dom'
 import Home from './pages/Home'
 import New from './pages/New'
 import Edit from './pages/Edit'
-import Detail from './pages/Detail'
 
 // types
 import {
@@ -91,7 +90,6 @@ function App() {
               <Route path="/:broadNo" element={<Home />}></Route>
               <Route path="/new" element={<New />}></Route>
               <Route path="/edit/:id" element={<Edit />}></Route>
-              <Route path="/detail/:id" element={<Detail />} />
             </Routes>
           </div>
         </ShareDispatchContext.Provider>
