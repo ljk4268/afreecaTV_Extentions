@@ -40,11 +40,15 @@ const ShareItem = ({
     try {
       const response = await deleteItems(params)
       if (response.status === 200) {
-        fetchData(1)
+        fetchData(broadcastNo)
       }
     } catch (error) {
       console.error('Error:', error)
     }
+  }
+  const goSite = (linkText: string) => {
+    if (!linkText) return
+    window.open(linkText, '_blank')
   }
   const fetchImages = async () => {
     const params = {
@@ -53,8 +57,10 @@ const ShareItem = ({
     }
     try {
       const res = await getImage(params)
-      if(res.status){
-        const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } ));
+      if (res.status) {
+        const url = window.URL.createObjectURL(
+          new Blob([res.data], { type: res.headers['content-type'] })
+        )
         setImageDataUrl(url)
       }
     } catch (error) {
@@ -73,8 +79,14 @@ const ShareItem = ({
       <div className="contents">
         <Accordion.Item eventKey={`${shareId}`}>
           <Accordion.Header>
-            <div className="img_wrapper">
-              {imageDataUrl && <img src={imageDataUrl} alt="Uploaded Image" />}
+            <div
+              className="img_wrapper"
+              onClick={(event) => {
+                event.stopPropagation()
+                goSite(linkText)
+              }}
+            >
+              {imageDataUrl && <img src={imageDataUrl} alt={srcImg} />}
             </div>
             <div className="shareTitle">{title}</div>
           </Accordion.Header>

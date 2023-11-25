@@ -1,7 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { createContext, useEffect, useReducer } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+
 // components
 import Home from './pages/Home'
 import New from './pages/New'
@@ -14,6 +15,8 @@ import {
   IBroadInfo,
   IData,
   IAction,
+  IBroadIdAction,
+  IIsBJAction,
 } from './interface/commonInterface'
 import { getItems } from './api/shareAPI'
 
@@ -29,17 +32,28 @@ const reducer = (state: IData[], action: IAction) => {
   }
   return newState
 }
+const broadNoReducer = (state: number, action: IBroadIdAction) => {
+  switch (action.type) {
+    case 'FETCH_BROADNO':
+      state = action.payload
+      return state
+    default:
+      return state
+  }
+}
 
 // initialShareData
 const initialData: IData[] = []
 
 //context
-export const ShareDataContext = createContext<IData[]>(initialData)
+export const ShareDataContext = createContext<IData[]>([])
+export const ShareBroadNoContext = createContext<number>(0)
 export const ShareDispatchContext = createContext<any>(undefined)
 
 function App() {
   const [data, dispatch] = useReducer(reducer, initialData)
-  const { pathname } = useLocation()
+  const [broadNo, broadNoDispatch] = useReducer(broadNoReducer, 0)
+  const navigate = useNavigate()
 
   const fetchData = async (broadNo: number) => {
     try {
@@ -54,32 +68,34 @@ function App() {
   }
 
   useEffect(() => {
-    // const SDK = window.AFREECA.ext
-    // const extensionSDK = SDK()
-    // extensionSDK.handleInitialization(
-    //   (authInfo: IAuthInfo, broadInfo: IBroadInfo) => {
-    //     if (authInfo.isBJ) {
-    //       fetchData(broadInfo.broadNo)
-    //     }
-    //   }
-    // )
-    console.log('App')
-    fetchData(1)
+    const SDK = window.AFREECA.ext
+    const extensionSDK = SDK()
+    extensionSDK.handleInitialization(
+      (authInfo: IAuthInfo, broadInfo: IBroadInfo) => {
+        if (authInfo.isBJ) {
+          fetchData(broadInfo.broadNo)
+          broadNoDispatch({ type: 'FETCH_BROADNO', payload: broadInfo.broadNo })
+          navigate(`/${broadInfo.broadNo}`)
+        } else {
+        }
+      }
+    )
   }, [])
 
   return (
     <ShareDataContext.Provider value={data}>
-      <ShareDispatchContext.Provider value={{ fetchData }}>
-        <div className="App">
-          {pathname === '/index.html' ? <Home /> : ''}
-          <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/new" element={<New />}></Route>
-            <Route path="/edit/:id" element={<Edit />}></Route>
-            <Route path="/detail/:id" element={<Detail />} />
-          </Routes>
-        </div>
-      </ShareDispatchContext.Provider>
+      <ShareBroadNoContext.Provider value={broadNo}>
+        <ShareDispatchContext.Provider value={{ fetchData }}>
+          <div className="App">
+            <Routes>
+              <Route path="/:broadNo" element={<Home />}></Route>
+              <Route path="/new" element={<New />}></Route>
+              <Route path="/edit/:id" element={<Edit />}></Route>
+              <Route path="/detail/:id" element={<Detail />} />
+            </Routes>
+          </div>
+        </ShareDispatchContext.Provider>
+      </ShareBroadNoContext.Provider>
     </ShareDataContext.Provider>
   )
 }

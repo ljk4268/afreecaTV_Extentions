@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ShareDataContext } from '../App'
+import { ShareBroadNoContext } from '../App'
 import { addItems, editItems } from '../api/shareAPI'
 
 // components
@@ -8,19 +8,14 @@ import Button from './Button'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 
 // types
-import { IData } from '../interface/commonInterface'
-
-interface EditorProps {
-  isEdit?: boolean
-  originData?: IData
-}
+import { EditorProps } from '../interface/commonInterface'
 
 const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
-  const dataList = useContext(ShareDataContext)
-  const broadcastNo = 1
+  const broadNo = useContext(ShareBroadNoContext)
   const navigate = useNavigate()
   const titleRef = useRef<HTMLInputElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const linkRef = useRef<HTMLInputElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
   const [shareTitle, setShareTitle] = useState<string>('')
   const [shareLink, setShareLink] = useState<string>('')
@@ -32,7 +27,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         setShareTitle(originData.title)
         setShareLink(originData.linkText)
         setShareDes(originData.tipText)
-      } // content == "" ? "내용없음" : content
+      }
     }
   }, [isEdit, originData])
 
@@ -43,8 +38,13 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         return
       }
 
+      if (shareLink && !shareLink.includes('afreecatv.com')) {
+        linkRef.current?.focus()
+        return
+      }
+
       const broadcastShareInsertDTO = {
-        broadcastNo: broadcastNo,
+        broadcastNo: broadNo,
         linkText: shareLink,
         title: shareTitle,
         tipText: shareDes,
@@ -52,7 +52,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
 
       const broadcastShareUpdateDTO = {
         shareId: originData?.shareId,
-        broadcastNo: broadcastNo,
+        broadcastNo: broadNo,
         srcImg: '',
         linkText: shareLink,
         title: shareTitle,
@@ -86,9 +86,8 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         )
         response = await addItems(formData)
       }
-
       if (response.status === 200) {
-        navigate('/', { replace: true })
+        navigate(`/${broadNo}`, { replace: true })
       } else {
         console.error('Error:', response.status)
       }
@@ -142,7 +141,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
             value={shareTitle}
             className="input_title"
             type="text"
-            placeholder="공유하고 싶은 정보를 입력해주세요."
+            placeholder="공유하고 싶은 정보를 입력해주세요.(필수)"
             onChange={(e) => setShareTitle(e.target.value)}
           ></input>
         </div>
@@ -153,10 +152,11 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         </div>
         <div className="input_box">
           <input
+            ref={linkRef}
             value={shareLink}
             className="input_link"
             type="text"
-            placeholder="링크가 있다면 입력해주세요."
+            placeholder="www.afreecatv.com이 포함된 링크를 입력해주세요.(필수아님)"
             onChange={(e) => setShareLink(e.target.value)}
           ></input>
         </div>
@@ -168,24 +168,24 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         <div className="input_box">
           <textarea
             value={shareDes}
-            placeholder="추가적인 내용이 필요하다면 입력해주세요."
+            placeholder="추가적인 내용이 필요하다면 입력해주세요.(필수아님)"
             onChange={(e) => setShareDes(e.target.value)}
           ></textarea>
         </div>
       </section>
-      <section>
-        <div className="editorpage_btn">
-          <Button
-            text="취소"
-            type="cancel"
-            onClick={() => navigate(-1)}
-          ></Button>
-          <Button
-            text={isEdit ? '수정' : '등록'}
-            onClick={handleSubmit}
-          ></Button>
-        </div>
-      </section>
+        <section>
+          <div className="editorpage_btn">
+            <Button
+              text="취소"
+              type="cancel"
+              onClick={() => navigate(-1)}
+            ></Button>
+            <Button
+              text={isEdit ? '수정' : '등록'}
+              onClick={handleSubmit}
+            ></Button>
+          </div>
+        </section>
     </div>
   )
 }

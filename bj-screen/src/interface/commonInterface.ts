@@ -1,3 +1,5 @@
+import { BlobOptions } from 'buffer'
+
 export interface IAuthInfo {
   accessToken: String
   userAgreeToken: String
@@ -57,4 +59,19 @@ export interface IData {
 export interface IAction {
   type: 'FETCH_SUCCESS'
   payload: IData[]
+}
+
+export interface IBroadIdAction {
+  type: 'FETCH_BROADNO'
+  payload: number
+}
+
+export interface IIsBJAction {
+  type: 'FETCH_ISBJ'
+  payload: Boolean
+}
+
+export interface EditorProps {
+  isEdit?: boolean
+  originData?: IData
 }

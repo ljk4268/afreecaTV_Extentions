@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ShareDataContext } from '../App'
 
-// types
-import { IData } from '../interface/commonInterface'
-
 // componenst
 import Editor from '../components/Editor'
+
+// types
+import { IData } from '../interface/commonInterface'
 
 const Edit = () => {
   const navigate = useNavigate()

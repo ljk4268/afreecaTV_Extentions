@@ -36,8 +36,16 @@ p {
 }
 
 /* Home */
+
 .Home {
   width: 100%;
+}
+.Home .nodata {
+  height: 100vw;
+  color: #ececec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .Home .homeHeader {
   background-color: rgb(246, 247, 255);
@@ -111,16 +119,13 @@ p {
   align-items: center;
   padding-top: 10px;
 }
-.ShareItem .btn_wrapper .icon{
+.ShareItem .btn_wrapper .icon {
   cursor: pointer;
 }
 
 /* Editor */
 .Editor {
   width: 100%;
-}
-.Editor section {
-  margin-top: 15px;
 }
 .Editor .img_wrapper {
   position: relative;
@@ -156,6 +161,7 @@ p {
   width: 80%;
   border: 1px solid #ececec;
   border-radius: 6px;
+  font-size: 13px;
 }
 .Editor textarea {
   box-sizing: border-box;
@@ -165,6 +171,7 @@ p {
   border: 1px solid #ececec;
   border-radius: 6px;
   padding: 10px;
+  font-size: 13px;
 }
 .Editor .editorpage_btn {
   padding-top: 10px;

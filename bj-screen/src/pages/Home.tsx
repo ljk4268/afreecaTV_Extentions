@@ -1,5 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { ShareDataContext, ShareDispatchContext } from '../App'
+import {
+  ShareDataContext,
+  ShareBroadNoContext,
+  ShareDispatchContext,
+} from '../App'
 import { useContext, useEffect } from 'react'
 
 // components
@@ -12,6 +16,7 @@ import { IData } from '../interface/commonInterface'
 
 const Home = () => {
   const dataList = useContext(ShareDataContext)
+  const broadNo = useContext(ShareBroadNoContext)
   const { fetchData } = useContext(ShareDispatchContext)
   const navigate = useNavigate()
 
@@ -21,8 +26,8 @@ const Home = () => {
   dataList.sort(compare)
 
   useEffect(() => {
-    fetchData(1)
-  }, [])
+    fetchData(broadNo)
+  }, [broadNo])
 
   return (
     <div className="Home">
@@ -30,13 +35,17 @@ const Home = () => {
         <p>💡 오늘의 공유</p>
         <Button text="추가하기" onClick={() => navigate('/new')} />
       </div>
-      <div className="list_wrapper">
-        <Accordion>
-          {dataList.map((data) => (
-            <ShareItem {...data} key={data.shareId} />
-          ))}
-        </Accordion>
-      </div>
+      {dataList.length < 1 ? (
+        <div className="nodata">등록된 내용이 없습니다</div>
+      ) : (
+        <div className="list_wrapper">
+          <Accordion>
+            {dataList.map((data) => (
+              <ShareItem {...data} key={data.shareId} />
+            ))}
+          </Accordion>
+        </div>
+      )}
     </div>
   )
 }
