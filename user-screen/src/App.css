@@ -36,6 +36,7 @@ p {
   align-items: center;
   font-weight: 500;
   position: sticky;
+  z-index: 1;
   top: 0;
 }
 .Home .homeHeader p {
@@ -100,4 +101,7 @@ p {
 }
 .ShareItem .btn_wrapper .icon {
   cursor: pointer;
+}
+.ShareItem .text_box {
+  font-size: 13px
 }

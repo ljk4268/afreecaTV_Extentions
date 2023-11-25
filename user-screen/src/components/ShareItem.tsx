@@ -8,6 +8,7 @@ import { IData } from '../interface/commonInterface'
 
 // API
 import { getImage } from '../api/shareAPI'
+import { ClassNames } from '@emotion/react'
 
 const ShareItem = ({
   shareId,
@@ -66,7 +67,9 @@ const ShareItem = ({
             <div className="shareTitle">{title}</div>
           </Accordion.Header>
           <Accordion.Body>
-            <div style={{ whiteSpace: 'pre-wrap' }}>{tipText}</div>
+            <div style={{ whiteSpace: 'pre-wrap' }} className="text_box">
+              {tipText}
+            </div>
           </Accordion.Body>
         </Accordion.Item>
       </div>
