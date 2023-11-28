@@ -24,11 +24,8 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
   const [shareLink, setShareLink] = useState<string>('')
   const [shareDes, setShareDes] = useState<string>('')
   const [sizeLimit, setSizeLimit] = useState<boolean>(false)
-  const [imageDataUrl, setImageDataUrl] = useState<string | null>(
-    originData?.srcImg && originData?.savedImgPath
-      ? null
-      : '/assets/afreecatv_logo.jpg'
-  )
+  const [invalidLink, setInvalidLink] = useState<boolean>(false)
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
 
   useEffect(() => {
     if (isEdit) {
@@ -49,6 +46,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
       }
 
       if (shareLink && !shareLink.includes('afreecatv.com')) {
+        setInvalidLink(true)
         linkRef.current?.focus()
         return
       }
@@ -75,7 +73,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
       if (fileInput && fileInput.files) {
         const file = fileInput.files[0]
         const fileSize = fileInput.files[0]?.size
-        const maxSize = 10 * 1024 * 1024;
+        const maxSize = 10 * 1024 * 1024
 
         if (fileSize > maxSize) {
           setSizeLimit(true)
@@ -125,10 +123,9 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
     if (file) {
       let reader = new FileReader()
       reader.onload = function (event) {
+        const imageDataUrl = event.target?.result as string
         // 이미지의 경로를 변경
-        if (imgRef.current) {
-          imgRef.current.src = event.target?.result as string
-        }
+        setImageDataUrl(imageDataUrl)
       }
       reader.readAsDataURL(file)
     }
@@ -152,12 +149,18 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
     }
   }
 
+  useEffect(() => {
+    console.log('ggggg')
+  }, [imageDataUrl])
+
   return (
     <div className="Editor">
       <section>
         <div className="img_wrapper">
-          {imageDataUrl && (
+          {imageDataUrl ? (
             <img ref={imgRef} src={imageDataUrl} alt={originData?.srcImg} />
+          ) : (
+            <div className="defaultIMG"></div>
           )}
           <AddAPhotoIcon className="img_addBtn" onClick={handleAddImage} />
           <input
@@ -170,7 +173,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
           />
         </div>
         {sizeLimit ? (
-          <div className="imgFile">이미지 파일은 10mb이하만 등록됩니다.</div>
+          <div className="errMSG">* 이미지 파일은 10mb이하만 등록됩니다.</div>
         ) : (
           ''
         )}
@@ -185,7 +188,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
             value={shareTitle}
             className="input_title"
             type="text"
-            placeholder="공유하고 싶은 정보를 입력해주세요.(필수)"
+            placeholder="공유하고 싶은 정보를 입력해주세요.(필수입력)"
             onChange={(e) => setShareTitle(e.target.value)}
           ></input>
         </div>
@@ -200,10 +203,15 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
             value={shareLink}
             className="input_link"
             type="text"
-            placeholder="afreecatv.com이 포함된 링크를 입력해주세요.(필수아님)"
+            placeholder="afreecatv.com이 포함된 링크를 입력해주세요.(필수입력아님)"
             onChange={(e) => setShareLink(e.target.value)}
           ></input>
         </div>
+        {invalidLink ? (
+          <div className="errMSG">* afreecatv.com이 포함된 링크를 입력해주세요.</div>
+        ) : (
+          ''
+        )}
       </section>
       <section>
         <div className="sectionTitle">
@@ -212,7 +220,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         <div className="input_box">
           <textarea
             value={shareDes}
-            placeholder="추가적인 내용이 필요하다면 입력해주세요.(필수아님)"
+            placeholder="추가적인 내용이 필요하다면 입력해주세요.(필수입력아님)"
             onChange={(e) => setShareDes(e.target.value)}
           ></textarea>
         </div>

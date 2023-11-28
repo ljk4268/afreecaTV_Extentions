@@ -55,14 +55,16 @@ function App() {
   const navigate = useNavigate()
 
   const fetchData = async (broadNo: number) => {
-    try {
-      const response = await getItems({ broadcastNo: broadNo })
-      response.data.shareList.forEach((d: IData) => {
-        d.tipText = d.tipText === '' ? '내용없음' : d.tipText
-      })
-      dispatch({ type: 'FETCH_SUCCESS', payload: response.data.shareList })
-    } catch (error) {
-      console.error('Error fetching data:', error)
+    if (broadNo !== 0) {
+      try {
+        const response = await getItems({ broadcastNo: broadNo })
+        response.data.shareList.forEach((d: IData) => {
+          d.tipText = d.tipText === '' ? '내용없음' : d.tipText
+        })
+        dispatch({ type: 'FETCH_SUCCESS', payload: response.data.shareList })
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
     }
   }
 

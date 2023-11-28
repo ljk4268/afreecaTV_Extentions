@@ -24,9 +24,7 @@ const ShareItem = ({
 }: IData) => {
   const navigate = useNavigate()
   const { fetchData } = useContext(ShareDispatchContext)
-  const [imageDataUrl, setImageDataUrl] = useState<string | null>(
-    srcImg && savedImgPath ? null : '/assets/afreecatv_logo.jpg'
-  )
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
 
   const goEdit = () => {
     navigate(`/edit/${shareId}`)
@@ -86,12 +84,18 @@ const ShareItem = ({
                 goSite(linkText)
               }}
             >
-              {imageDataUrl && <img src={imageDataUrl} alt={srcImg} />}
+              {imageDataUrl ? (
+                <img src={imageDataUrl} alt={srcImg} />
+              ) : (
+                <div className="defaultIMG"></div>
+              )}
             </div>
             <div className="shareTitle">{title}</div>
           </Accordion.Header>
           <Accordion.Body>
-            <div className='text_box' style={{ whiteSpace: 'pre-wrap' }}>{tipText}</div>
+            <div className="text_box" style={{ whiteSpace: 'pre-wrap' }}>
+              {tipText}
+            </div>
             <div className="btn_wrapper">
               <div className="icon edit">
                 <EditNoteOutlinedIcon onClick={goEdit} />

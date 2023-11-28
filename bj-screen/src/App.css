@@ -22,7 +22,7 @@ p {
   padding: 0 16px;
   margin-left: 5px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: bold;
   min-width: 70px;
 }
@@ -55,13 +55,13 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
   position: sticky;
   top: 0;
 }
 .Home .homeHeader p {
   margin-bottom: 0;
-  font-size: 18px;
+  font-size: 15px;
+  font-weight: 700;
   z-index: 1;
 }
 .Home .list_wrapper {
@@ -100,6 +100,15 @@ p {
   left: 0;
   border-radius: 6px;
 }
+.ShareItem .img_wrapper .defaultIMG{
+  background-image: url('../public/images/afreecatv_logo.jpg');
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: contain;
+  border-radius: 6px;
+
+}
 .ShareItem .img_addBtn {
   border-radius: 6px;
 }
@@ -107,8 +116,8 @@ p {
   border-radius: 6px;
 }
 .ShareItem .shareTitle {
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -133,11 +142,14 @@ p {
 }
 .Editor .img_wrapper {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 200px;
   height: 200px;
+}
+.Editor .img_wrapper .defaultIMG{
+  background-image: url('../public/images/afreecatv_logo.jpg');
+  width: 100%;
+  height: 100%;
+  background-position: center;
 }
 .Editor .img_wrapper img {
   width: 100%;
@@ -150,20 +162,24 @@ p {
 }
 .Editor .img_wrapper .img_addBtn {
   position: absolute;
-  color: white;
+  color: rgb(230, 234, 252);
   cursor: pointer;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .Editor .img_wrapper .addInput {
   visibility: hidden;
 }
-.Editor .imgFile {
-  font-size: 10px;
+.Editor .errMSG {
+  font-size: 11px;
   color: red;
-  font-weight: bold;
+  font-weight: 500;
 }
 .Editor .sectionTitle {
   font-size: 13px;
   font-weight: bold;
+  margin-top: 15px;
 }
 .Editor .input_box input {
   padding: 10px;
@@ -204,4 +220,9 @@ p {
   font-weight: bold;
   position: sticky;
   top: 0;
+}
+
+/* mui */
+.accordion-button {
+  padding: 10px 15px;
 }
