@@ -1,3 +1,2 @@
 # Ignore node_modules directory
-bj-screen/node_modules/
-user-screen/node_modules/
+**/node_modules/

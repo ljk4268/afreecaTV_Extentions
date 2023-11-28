@@ -19,9 +19,7 @@ const ShareItem = ({
   title,
   tipText,
 }: IData) => {
-  const [imageDataUrl, setImageDataUrl] = useState<string | null>(
-    srcImg && savedImgPath ? null : '/assets/afreecatv_logo.jpg'
-  )
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
   const goSite = (linkText: string) => {
     if (!linkText) return
     window.open(linkText, '_blank')
@@ -62,7 +60,11 @@ const ShareItem = ({
                 goSite(linkText)
               }}
             >
-              {imageDataUrl && <img src={imageDataUrl} alt={srcImg} />}
+              {imageDataUrl ? (
+                <img src={imageDataUrl} alt={srcImg} />
+              ) : (
+                <div className="defaultIMG"></div>
+              )}
             </div>
             <div className="shareTitle">{title}</div>
           </Accordion.Header>
