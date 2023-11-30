@@ -53,11 +53,10 @@ function App() {
     const SDK = window.AFREECA.ext
     const extensionSDK = SDK()
     extensionSDK.handleInitialization(
-      (authInfo: IAuthInfo, broadInfo: IBroadInfo) => {
-        if (authInfo.isBJ) {
+      (broadInfo: IBroadInfo) => {
+        if (broadInfo) {
           fetchData(broadInfo.broadNo)
           navigate(`/${broadInfo.broadNo}`)
-        } else {
         }
       }
     )
