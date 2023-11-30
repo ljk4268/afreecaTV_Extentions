@@ -1,2 +1,7 @@
 # Ignore node_modules directory
 **/node_modules/
+
+#user-screen node_modules remove
+user-screen/node_modules/
+
+**/build/
