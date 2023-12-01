@@ -12,18 +12,24 @@ import { ClassNames } from '@emotion/react'
 
 const ShareItem = ({
   shareId,
-  broadcastNo,
   savedImgPath,
   srcImg,
   linkText,
   title,
   tipText,
 }: IData) => {
-  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null) // 이미지URL
+
+  // 링크가 입력되어 있는 경우 해당 사이트로 이동
   const goSite = (linkText: string) => {
     if (!linkText) return
     window.open(linkText, '_blank')
   }
+
+  /**
+   * 서버에서 받아온 이미지를 URL로 변경하고, 
+   * 변경된 URL를 imageDataUrl에 할당
+   */
   const fetchImages = async () => {
     const params = {
       srcImg: srcImg,
@@ -43,6 +49,7 @@ const ShareItem = ({
   }
 
   useEffect(() => {
+    // srcImg와 savedImgPath 값이 있는 경우 fetchImages() 실행
     if (srcImg && savedImgPath) {
       fetchImages()
     }

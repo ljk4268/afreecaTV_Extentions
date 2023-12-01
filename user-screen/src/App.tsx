@@ -34,21 +34,28 @@ export const ShareBroadNoContext = createContext<number>(0)
 export const ShareDispatchContext = createContext<any>(undefined)
 
 function App() {
-  const [data, dispatch] = useReducer(reducer, [])
-  const navigate = useNavigate()
+  const [data, dispatch] = useReducer(reducer, []) // 공유된 정보 리스트
+  const navigate = useNavigate() // 페이지 이동을 위한 라우터
 
+  /**
+   * 방송정보에 해당하는 공유된 리스트 가져오는 메소드
+   * @param broadNo 
+   */
   const fetchData = async (broadNo: number) => {
     try {
       const response = await getItems({ broadcastNo: broadNo })
+      // tipText가 공백이면 '내용없음'으로 변경
       response.data.shareList.forEach((d: IData) => {
         d.tipText = d.tipText === '' ? '내용없음' : d.tipText
       })
+      // 서버에서 가져온 데이터로 공유된 정보 리스트 업데이트
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data.shareList })
     } catch (error) {
       console.error('Error fetching data:', error)
     }
   }
 
+  // 처음 한 번 방송번호에 해당되는 공유된 정보 가지고 온 뒤 메인화면으로 이동
   useEffect(() => {
     const SDK = window.AFREECA.ext
     const extensionSDK = SDK()
@@ -67,6 +74,7 @@ function App() {
       <ShareDispatchContext.Provider value={{ fetchData }}>
         <div className="App">
           <Routes>
+          {/* 메인화면 */}
             <Route path="/:broadNo" element={<Home />}></Route>
           </Routes>
         </div>

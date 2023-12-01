@@ -9,12 +9,13 @@ import Accordion from 'react-bootstrap/Accordion'
 import { IData } from '../interface/commonInterface'
 
 const Home = () => {
-  const dataList = useContext(ShareDataContext)
+  const dataList = useContext(ShareDataContext) // 공유된 데이터 리스트
 
-  const compare: (a: IData, b: IData) => number = (a, b) => {
+
+  // 최신순 정렬 (= 내림차순)
+  dataList.sort((a: IData, b: IData) => {
     return b.shareId - a.shareId
-  }
-  dataList.sort(compare)
+  })
 
   return (
     <div className="Home">
