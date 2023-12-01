@@ -69,7 +69,10 @@ const ShareItem = ({
             <div className="shareTitle">{title}</div>
           </Accordion.Header>
           <Accordion.Body>
-            <div style={{ whiteSpace: 'pre-wrap' }} className="text_box">
+            <div
+              style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}
+              className="text_box"
+            >
               {tipText}
             </div>
           </Accordion.Body>
