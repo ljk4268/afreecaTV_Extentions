@@ -51,14 +51,14 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         return
       }
 
-      const broadcastShareInsertDTO = {
+      const insertBroadcastShareInfo = {
         broadcastNo: broadNo,
         linkText: shareLink,
         title: shareTitle,
         tipText: shareDes,
       }
 
-      const broadcastShareUpdateDTO = {
+      const updataeBroadcastShareInfo = {
         shareId: originData?.shareId,
         broadcastNo: broadNo,
         srcImg: originData?.srcImg,
@@ -88,16 +88,16 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
 
       if (isEdit) {
         formData.append(
-          'broadcastShareUpdateDTO',
-          new Blob([JSON.stringify(broadcastShareUpdateDTO)], {
+          'updataeBroadcastShareInfo',
+          new Blob([JSON.stringify(updataeBroadcastShareInfo)], {
             type: 'application/json',
           })
         )
         response = await editItems(formData)
       } else {
         formData.append(
-          'broadcastShareInsertDTO',
-          new Blob([JSON.stringify(broadcastShareInsertDTO)], {
+          'insertBroadcastShareInfo',
+          new Blob([JSON.stringify(insertBroadcastShareInfo)], {
             type: 'application/json',
           })
         )
@@ -124,7 +124,6 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
       let reader = new FileReader()
       reader.onload = function (event) {
         const imageDataUrl = event.target?.result as string
-        // 이미지의 경로를 변경
         setImageDataUrl(imageDataUrl)
       }
       reader.readAsDataURL(file)
@@ -148,10 +147,6 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
       console.error('Error:', error)
     }
   }
-
-  useEffect(() => {
-    console.log('ggggg')
-  }, [imageDataUrl])
 
   return (
     <div className="Editor">
