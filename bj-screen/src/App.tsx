@@ -15,7 +15,6 @@ import {
   IData,
   IAction,
   IBroadIdAction,
-  IIsBJAction,
 } from './interface/commonInterface'
 import { getItems } from './api/shareAPI'
 
@@ -41,19 +40,20 @@ const broadNoReducer = (state: number, action: IBroadIdAction) => {
   }
 }
 
-// initialShareData
-const initialData: IData[] = []
-
 //context
 export const ShareDataContext = createContext<IData[]>([])
 export const ShareBroadNoContext = createContext<number>(0)
 export const ShareDispatchContext = createContext<any>(undefined)
 
 function App() {
-  const [data, dispatch] = useReducer(reducer, initialData)
-  const [broadNo, broadNoDispatch] = useReducer(broadNoReducer, 0)
-  const navigate = useNavigate()
+  const [data, dispatch] = useReducer(reducer, []) // 공유할 정보 데이터
+  const [broadNo, broadNoDispatch] = useReducer(broadNoReducer, 0) // 방송번호
+  const navigate = useNavigate() // 페이지이동시 필요한 라우터
 
+  /**
+   * 방송번호로 BJ가 공유한 정보를 가져오는 함수입니다.
+   * @param broadNo 
+   */
   const fetchData = async (broadNo: number) => {
     if (broadNo !== 0) {
       try {
@@ -73,10 +73,10 @@ function App() {
     const extensionSDK = SDK()
     extensionSDK.handleInitialization(
       (authInfo: IAuthInfo, broadInfo: IBroadInfo) => {
-        if (authInfo.isBJ) {
-          fetchData(broadInfo.broadNo)
-          broadNoDispatch({ type: 'FETCH_BROADNO', payload: broadInfo.broadNo })
-          navigate(`/${broadInfo.broadNo}`)
+        if (authInfo.isBJ) { // BJ가 맞는지 확인
+          fetchData(broadInfo.broadNo) // 공유한 정보를 가져옴
+          broadNoDispatch({ type: 'FETCH_BROADNO', payload: broadInfo.broadNo }) // 방송번호를 저장
+          navigate(`/${broadInfo.broadNo}`) // 페이지 이동하기 위한 라우터
         } else {
         }
       }
@@ -89,8 +89,11 @@ function App() {
         <ShareDispatchContext.Provider value={{ fetchData }}>
           <div className="App">
             <Routes>
-              <Route path="/:broadNo" element={<Home />}></Route>
+              {/* 메인화면 */}
+              <Route path="/:broadNo" element={<Home />}></Route> 
+              {/* 새 글 작성 */}
               <Route path="/new" element={<New />}></Route>
+              {/* 수정화면 */}
               <Route path="/edit/:id" element={<Edit />}></Route>
             </Routes>
           </div>

@@ -14,20 +14,21 @@ import { EditorProps } from '../interface/commonInterface'
 import { getImage } from '../api/shareAPI'
 
 const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
-  const broadNo = useContext(ShareBroadNoContext)
-  const navigate = useNavigate()
-  const titleRef = useRef<HTMLInputElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const linkRef = useRef<HTMLInputElement>(null)
-  const imgRef = useRef<HTMLImageElement>(null)
-  const [shareTitle, setShareTitle] = useState<string>('')
-  const [shareLink, setShareLink] = useState<string>('')
-  const [shareDes, setShareDes] = useState<string>('')
-  const [sizeLimit, setSizeLimit] = useState<boolean>(false)
-  const [invalidLink, setInvalidLink] = useState<boolean>(false)
-  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
+  const broadNo = useContext(ShareBroadNoContext) // 방송번호
+  const navigate = useNavigate() // 페이지 이동하기 위한 라우터
+  const titleRef = useRef<HTMLInputElement>(null) // title 태그 
+  const inputRef = useRef<HTMLInputElement>(null) // input 태그
+  const linkRef = useRef<HTMLInputElement>(null) // linkInput 태그
+  const imgRef = useRef<HTMLImageElement>(null) // img 태그
+  const [shareTitle, setShareTitle] = useState<string>('') // 타이틀
+  const [shareLink, setShareLink] = useState<string>('') // 링크
+  const [shareDes, setShareDes] = useState<string>('') // 상세내용
+  const [sizeLimit, setSizeLimit] = useState<boolean>(false) // 이미지사이즈
+  const [invalidLink, setInvalidLink] = useState<boolean>(false) // 유효성
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null) // 이미지 URL
 
   useEffect(() => {
+    // 수정화면인 경우 title, link, description 값 셋팅 및 이미지 가져오기
     if (isEdit) {
       if (originData) {
         setShareTitle(originData.title)
@@ -38,19 +39,26 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
     }
   }, [isEdit, originData])
 
+  /**
+   * 새 글 작성 또는 수정 로직
+   * @returns 메인화면 이동
+   */
   const handleSubmit = async () => {
     try {
+      // 제목이 비어있으면 해당 칸으로 이동 및 포커스
       if (shareTitle.length < 1) {
         titleRef.current?.focus()
         return
       }
 
+      // 링크에 'afreecatv.com'이 포함되어있지 않으면 해당 칸으로 이동 및 포커스
       if (shareLink && !shareLink.includes('afreecatv.com')) {
         setInvalidLink(true)
         linkRef.current?.focus()
         return
       }
 
+      // 새 글 작성시 보낼 params
       const insertBroadcastShareInfo = {
         broadcastNo: broadNo,
         linkText: shareLink,
@@ -58,6 +66,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         tipText: shareDes,
       }
 
+      // 수정시 보낼 params
       const updataeBroadcastShareInfo = {
         shareId: originData?.shareId,
         broadcastNo: broadNo,
@@ -67,8 +76,10 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         tipText: shareDes,
       }
 
+      // formData 생성
       const formData = new FormData()
 
+      // 사진 크기 검사 후 10mb보다 작으면 multipartFiles로 파일 첨부
       const fileInput = inputRef.current
       if (fileInput && fileInput.files) {
         const file = fileInput.files[0]
@@ -86,7 +97,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
 
       let response
 
-      if (isEdit) {
+      if (isEdit) { // 수정시 서버에 보내지는 데이터
         formData.append(
           'updataeBroadcastShareInfo',
           new Blob([JSON.stringify(updataeBroadcastShareInfo)], {
@@ -95,7 +106,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         )
         response = await editItems(formData)
       } else {
-        formData.append(
+        formData.append( // 새 글 작성시 서버에 보내지는 데이터
           'insertBroadcastShareInfo',
           new Blob([JSON.stringify(insertBroadcastShareInfo)], {
             type: 'application/json',
@@ -103,6 +114,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
         )
         response = await addItems(formData)
       }
+      // 성공시 메인화면 이동
       if (response.status === 200) {
         navigate(`/${broadNo}`, { replace: true })
       } else {
@@ -113,23 +125,34 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
     }
   }
 
+  /**
+   * 촬영 아이콘 클릭시 input태그 클릭되는 메소드
+   */
   const handleAddImage = () => {
     document.getElementById('backgroundImgInput')?.click()
   }
 
+  /**
+   * 이미지가 추가 및 변경된 경우 imageDataUrl값 업데이트
+   * @param e : 사용자가 추가한 이미지
+   */
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files ? e.target.files[0] : null
 
     if (file) {
       let reader = new FileReader()
       reader.onload = function (event) {
-        const imageDataUrl = event.target?.result as string
-        setImageDataUrl(imageDataUrl)
+        const imageData = event.target?.result as string
+        setImageDataUrl(imageData)
       }
       reader.readAsDataURL(file)
     }
   }
 
+  /**
+   * 서버에서 받아온 이미지를 URL로 변경하고, 
+   * 변경된 URL를 imageDataUrl에 할당
+   */
   const fetchImages = async () => {
     const params = {
       srcImg: originData?.srcImg,
@@ -150,6 +173,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
 
   return (
     <div className="Editor">
+      {/* 이미지 */}
       <section>
         <div className="img_wrapper">
           {imageDataUrl ? (
@@ -173,6 +197,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
           ''
         )}
       </section>
+      {/* 타이틀 */}
       <section>
         <div className="sectionTitle">
           <p>제목</p>
@@ -188,6 +213,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
           ></input>
         </div>
       </section>
+      {/* 링크 */}
       <section>
         <div className="sectionTitle">
           <p>링크</p>
@@ -208,6 +234,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
           ''
         )}
       </section>
+      {/* 상세내용 */}
       <section>
         <div className="sectionTitle">
           <p>내용</p>
@@ -220,6 +247,7 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
           ></textarea>
         </div>
       </section>
+      {/* 버튼 */}
       <section>
         <div className="editorpage_btn">
           <Button

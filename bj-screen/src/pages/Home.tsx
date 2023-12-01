@@ -15,17 +15,19 @@ import Accordion from 'react-bootstrap/Accordion'
 import { IData } from '../interface/commonInterface'
 
 const Home = () => {
-  const dataList = useContext(ShareDataContext)
-  const broadNo = useContext(ShareBroadNoContext)
-  const { fetchData } = useContext(ShareDispatchContext)
-  const navigate = useNavigate()
+  const dataList = useContext(ShareDataContext) // 공유한 정보 리스트
+  const broadNo = useContext(ShareBroadNoContext) // 방송번호
+  const { fetchData } = useContext(ShareDispatchContext) // 공유한 정보 가져오는 메소드
+  const navigate = useNavigate() // 페이지 이동하기 위한 라우터
 
-  const compare: (a: IData, b: IData) => number = (a, b) => {
+  
+  // 최신순 정렬(=내림차순)
+  dataList.sort((a: IData, b: IData) => {
     return b.shareId - a.shareId
-  }
-  dataList.sort(compare)
+  })
 
   useEffect(() => {
+    // 방송번호에 해당하는 공유된 정보 가져오는 메소드 실행
     fetchData(broadNo)
   }, [])
 
