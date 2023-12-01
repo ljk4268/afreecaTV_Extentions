@@ -149,10 +149,6 @@ const Editor: React.FC<EditorProps> = ({ isEdit, originData }) => {
     }
   }
 
-  useEffect(() => {
-    console.log('ggggg')
-  }, [imageDataUrl])
-
   return (
     <div className="Editor">
       <section>
